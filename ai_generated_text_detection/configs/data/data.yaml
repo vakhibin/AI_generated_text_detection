@@ -1,0 +1,10 @@
+train_path: data/train.csv
+val_path: data/val.csv
+infer_path: data/test.csv
+dataloaders_dir: "preprocessed_data"
+dataloaders_filename: "preprocessed.pkl"
+train_size: 0.7
+val_size: 0.2
+test_size: 0.1
+vocab_size: 5000
+save_preprocessed: true

@@ -1,0 +1,15 @@
+defaults:
+  - data: data
+  - model: transformer_classifier
+  - training_params: training_params
+  - logging: mlflow
+  - _self_
+
+in_features: 771
+num_classes: 2
+device: "cpu"
+random_state: 23
+
+outputs_dir: outputs
+state_dict_file: ${.outputs_dir}/${.model.type}.pth
+submission_file: ${.outputs_dir}/submission.csv

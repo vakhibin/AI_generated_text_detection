@@ -1,0 +1,12 @@
+# @package _global_.model
+type: "lstm_classifier"
+
+_target_: ai_generated_text_detection.model.lstm_classifier.LSTMClassifier
+
+params:
+  vocab_size: 5000
+  embedding_dim: 300
+  hidden_dim: 256
+  num_layers: 2
+  dropout: 0.5
+  num_classes: 2

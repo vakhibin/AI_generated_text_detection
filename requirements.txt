@@ -1,0 +1,8 @@
+pandas
+numpy
+nltk
+torch
+pytorch_lightning
+torchmetrics
+scikit-learn
+pre-commit
