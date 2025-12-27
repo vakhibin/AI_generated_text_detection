@@ -2,13 +2,12 @@
 
 import pickle
 from pathlib import Path
-import torch
 from ai_generated_text_detection.logger import logger
 
 
 def load_preprocessed_data(
-        dataloaders_dir: str = "preprocessed_data",
-        dataloaders_filename: str = "dataloaders.pkl"
+    dataloaders_dir: str = "preprocessed_data",
+    dataloaders_filename: str = "dataloaders.pkl",
 ) -> tuple:
     """
     Загружает препроцессированные данные из файла pickle.
@@ -46,7 +45,7 @@ def load_preprocessed_data(
         vocab = data["vocab"]
         inverse_vocab = data["inverse_vocab"]
 
-        logger.info(f"Данные успешно загружены:")
+        logger.info("Данные успешно загружены:")
         logger.info(f"   Train batches: {len(train_loader)}")
         logger.info(f"   Val batches: {len(val_loader)}")
         logger.info(f"   Test batches: {len(test_loader)}")
@@ -55,7 +54,9 @@ def load_preprocessed_data(
         return train_loader, val_loader, test_loader, vocab, inverse_vocab
 
     except Exception as e:
-        raise Exception(f"Ошибка при загрузке препроцессированных данных из {data_path}: {e}")
+        raise Exception(
+            f"Ошибка при загрузке препроцессированных данных из {data_path}: {e}"
+        )
 
 
 def get_vocab() -> dict:
@@ -68,7 +69,9 @@ def get_vocab() -> dict:
     Raises:
         FileNotFoundError: Если файл с данными не найден
     """
-    train_loader, val_loader, test_loader, vocab, inverse_vocab = load_preprocessed_data()
+    train_loader, val_loader, test_loader, vocab, inverse_vocab = (
+        load_preprocessed_data()
+    )
     return vocab
 
 

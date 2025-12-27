@@ -110,13 +110,18 @@ def load_and_split_data(cfg: DictConfig) -> None:
             else:
                 logger.info(f"  ✗ {path.name}: файл не найден")
 
-        # 7. Очистка временных файлов
+        # 7. ДОБАВЛЕННЫЙ КОД: Версионирование в DVC
+        logger.info("Добавление данных в DVC для версионирования...")
+        import subprocess
+        for csv_file in [train_path, val_path, infer_path]:
+            subprocess.run(["dvc", "add", str(csv_file)], capture_output=True)
+
+        # 8. Очистка временных файлов
         logger.info(f"\nОчистка временных файлов из {download_path}")
         shutil.rmtree(download_path)
 
     except Exception as e:
         raise LoadingDataException(f"Ошибка при загрузке данных: {e}")
-
 
 def load_data_with_config():
     """

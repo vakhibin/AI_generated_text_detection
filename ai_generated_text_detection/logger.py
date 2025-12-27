@@ -2,7 +2,10 @@ import logging
 import sys
 from pathlib import Path
 
-def setup_logger(name: str = __name__, log_file: str = "training.log") -> logging.Logger:
+
+def setup_logger(
+    name: str = __name__, log_file: str = "training.log"
+) -> logging.Logger:
     log_path = Path(log_file)
     log_path.parent.mkdir(parents=True, exist_ok=True)
 
@@ -11,8 +14,8 @@ def setup_logger(name: str = __name__, log_file: str = "training.log") -> loggin
 
     if not logger.handlers:
         formatter = logging.Formatter(
-            '%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-            datefmt='%Y-%m-%d %H:%M:%S'
+            "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+            datefmt="%Y-%m-%d %H:%M:%S",
         )
 
         console_handler = logging.StreamHandler(sys.stdout)

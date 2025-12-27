@@ -26,19 +26,26 @@ def create_model(model_name: str, **kwargs) -> nn.Module:
     model_name = model_name.lower()
 
     # Убираем _classifier если есть
-    if model_name.endswith('_classifier'):
-        model_name = model_name.replace('_classifier', '')
+    if model_name.endswith("_classifier"):
+        model_name = model_name.replace("_classifier", "")
 
     if model_name == "lstm":
-        from ai_generated_text_detection.models.lstm_classifier import EssayLSTMClassifier
+        from ai_generated_text_detection.models.lstm_classifier import (
+            EssayLSTMClassifier,
+        )
+
         return EssayLSTMClassifier(**kwargs)
 
     elif model_name == "transformer":
-        from ai_generated_text_detection.models.transformer_classifier import SimpleTransformerClassifier
+        from ai_generated_text_detection.models.transformer_classifier import (
+            SimpleTransformerClassifier,
+        )
+
         return SimpleTransformerClassifier(**kwargs)
     else:
-        raise ValueError(f"Неизвестная модель: {model_name}. "
-                         f"Доступные модели: 'lstm', 'transformer'")
+        raise ValueError(
+            f"Неизвестная модель: {model_name}. Доступные модели: 'lstm', 'transformer'"
+        )
 
 
 def create_model_module(model: nn.Module, cfg) -> UniversalModelModule:
@@ -59,8 +66,8 @@ def create_model_module(model: nn.Module, cfg) -> UniversalModelModule:
     """
     # Получаем чистый тип модели
     model_type = cfg.model.type
-    if model_type.endswith('_classifier'):
-        clean_model_type = model_type.replace('_classifier', '')
+    if model_type.endswith("_classifier"):
+        clean_model_type = model_type.replace("_classifier", "")
     else:
         clean_model_type = model_type
 
@@ -73,7 +80,7 @@ def create_model_module(model: nn.Module, cfg) -> UniversalModelModule:
         scheduler=cfg.training_params.get("scheduler", None),
         scheduler_patience=cfg.training_params.get("scheduler_patience", 5),
         scheduler_factor=cfg.training_params.get("scheduler_factor", 0.1),
-        log_interval=cfg.training_params.get("log_interval", 10)
+        log_interval=cfg.training_params.get("log_interval", 10),
     )
 
 
@@ -101,6 +108,7 @@ def create_model_and_module(cfg) -> tuple:
     # Для LSTM
     if model_type == "lstm_classifier":
         from ai_generated_text_detection.models.lstm_classifier import LSTMClassifier
+
         model = LSTMClassifier(
             vocab_size=params.vocab_size,
             embedding_dim=params.embedding_dim,
@@ -111,7 +119,10 @@ def create_model_and_module(cfg) -> tuple:
 
     # Для Transformer
     elif model_type == "transformer_classifier":
-        from ai_generated_text_detection.models.transformer_classifier import SimpleTransformerClassifier
+        from ai_generated_text_detection.models.transformer_classifier import (
+            SimpleTransformerClassifier,
+        )
+
         model = SimpleTransformerClassifier(
             vocab_size=params.vocab_size,
             max_len=cfg.in_features,
@@ -136,7 +147,7 @@ def create_model_and_module(cfg) -> tuple:
         scheduler=cfg.training_params.get("scheduler", None),
         scheduler_patience=cfg.training_params.get("scheduler_patience", 5),
         scheduler_factor=cfg.training_params.get("scheduler_factor", 0.1),
-        log_interval=cfg.training_params.get("log_interval", 10)
+        log_interval=cfg.training_params.get("log_interval", 10),
     )
 
     return model, model_module

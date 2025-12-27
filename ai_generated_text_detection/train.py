@@ -194,6 +194,12 @@ def train() -> None:
         if best_model_path:
             logger.info(f"   Лучшая модель: {best_model_path}")
 
+        # 9. ДОБАВЛЕННЫЙ КОД: Версионирование модели в DVC
+        logger.info("Добавление обученной модели в DVC...")
+        import subprocess
+        subprocess.run(["dvc", "add", cfg.state_dict_file], capture_output=True)
+        if best_model_path:
+            subprocess.run(["dvc", "add", best_model_path], capture_output=True)
 
 if __name__ == "__main__":
     fire.Fire(component=train)

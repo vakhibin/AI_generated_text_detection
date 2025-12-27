@@ -38,16 +38,16 @@ class UniversalModelModule(L.LightningModule):
     """
 
     def __init__(
-            self,
-            model: nn.Module,
-            model_type: str = "custom",
-            learning_rate: float = 1e-3,
-            weight_decay: float = 0.0,
-            optimizer: str = "adam",
-            scheduler: Optional[str] = None,
-            scheduler_patience: int = 5,
-            scheduler_factor: float = 0.1,
-            log_interval: int = 10
+        self,
+        model: nn.Module,
+        model_type: str = "custom",
+        learning_rate: float = 1e-3,
+        weight_decay: float = 0.0,
+        optimizer: str = "adam",
+        scheduler: Optional[str] = None,
+        scheduler_patience: int = 5,
+        scheduler_factor: float = 0.1,
+        log_interval: int = 10,
     ):
         super().__init__()
 
@@ -62,7 +62,7 @@ class UniversalModelModule(L.LightningModule):
         self.log_interval = log_interval
 
         # Сохраняем гиперпараметры для воспроизводимости
-        self.save_hyperparameters(ignore=['model'])
+        self.save_hyperparameters(ignore=["model"])
 
         # Функция потерь для бинарной классификации
         self.loss_fn = nn.BCEWithLogitsLoss()
@@ -83,16 +83,10 @@ class UniversalModelModule(L.LightningModule):
         }
 
         # Метрики для тренировки
-        self.train_metrics = MetricCollection(
-            {**common_metrics},
-            prefix="train_"
-        )
+        self.train_metrics = MetricCollection({**common_metrics}, prefix="train_")
 
         # Метрики для валидации
-        self.val_metrics = MetricCollection(
-            {**common_metrics},
-            prefix="val_"
-        )
+        self.val_metrics = MetricCollection({**common_metrics}, prefix="val_")
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """
@@ -165,12 +159,12 @@ class UniversalModelModule(L.LightningModule):
 
         # Дополнительное логирование для LSTM
         if self.model_type == "lstm" and (
-                self.trainer.current_epoch % self.log_interval == 0 or
-                self.trainer.current_epoch == self.trainer.max_epochs - 1
+            self.trainer.current_epoch % self.log_interval == 0
+            or self.trainer.current_epoch == self.trainer.max_epochs - 1
         ):
             self.log(
                 f"Epoch {self.trainer.current_epoch}, Batch {batch_idx}: Train loss = {loss:.4f}",
-                logger=True
+                logger=True,
             )
 
         return loss
@@ -195,14 +189,14 @@ class UniversalModelModule(L.LightningModule):
 
         # Дополнительное логирование для LSTM
         if self.model_type == "lstm" and (
-                self.trainer.current_epoch % self.log_interval == 0 or
-                self.trainer.current_epoch == self.trainer.max_epochs - 1
+            self.trainer.current_epoch % self.log_interval == 0
+            or self.trainer.current_epoch == self.trainer.max_epochs - 1
         ):
             preds = (torch.sigmoid(self(batch[0])) > 0.5).float()
             acc = (preds == batch[1]).float().mean()
             self.log(
                 f"Epoch {self.trainer.current_epoch}, Batch {batch_idx}: Val acc = {acc:.4f}",
-                logger=True
+                logger=True,
             )
 
         return loss
@@ -258,22 +252,18 @@ class UniversalModelModule(L.LightningModule):
         # Выбор оптимизатора
         if self.optimizer_type == "adam":
             optimizer = torch.optim.Adam(
-                self.parameters(),
-                lr=self.learning_rate,
-                weight_decay=self.weight_decay
+                self.parameters(), lr=self.learning_rate, weight_decay=self.weight_decay
             )
         elif self.optimizer_type == "adamw":
             optimizer = torch.optim.AdamW(
-                self.parameters(),
-                lr=self.learning_rate,
-                weight_decay=self.weight_decay
+                self.parameters(), lr=self.learning_rate, weight_decay=self.weight_decay
             )
         elif self.optimizer_type == "sgd":
             optimizer = torch.optim.SGD(
                 self.parameters(),
                 lr=self.learning_rate,
                 weight_decay=self.weight_decay,
-                momentum=0.9
+                momentum=0.9,
             )
         else:
             raise ValueError(f"Неизвестный оптимизатор: {self.optimizer_type}")
@@ -282,10 +272,10 @@ class UniversalModelModule(L.LightningModule):
         if self.scheduler_type == "reduce_lr_on_plateau":
             scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
                 optimizer,
-                mode='min',
+                mode="min",
                 patience=self.scheduler_patience,
                 factor=self.scheduler_factor,
-                verbose=True
+                verbose=True,
             )
             return {
                 "optimizer": optimizer,
@@ -293,28 +283,28 @@ class UniversalModelModule(L.LightningModule):
                     "scheduler": scheduler,
                     "monitor": "val_loss",
                     "interval": "epoch",
-                    "frequency": 1
-                }
+                    "frequency": 1,
+                },
             }
         elif self.scheduler_type == "cosine":
             scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
                 optimizer,
                 T_max=self.trainer.max_epochs,
-                eta_min=self.learning_rate * 0.01
+                eta_min=self.learning_rate * 0.01,
             )
             return [optimizer], [scheduler]
         elif self.scheduler_type == "step":
             scheduler = torch.optim.lr_scheduler.StepLR(
-                optimizer,
-                step_size=self.trainer.max_epochs // 3,
-                gamma=0.1
+                optimizer, step_size=self.trainer.max_epochs // 3, gamma=0.1
             )
             return [optimizer], [scheduler]
         else:
             # Без scheduler
             return optimizer
 
-    def predict_step(self, batch: tuple, batch_idx: int, dataloader_idx: int = 0) -> Dict[str, torch.Tensor]:
+    def predict_step(
+        self, batch: tuple, batch_idx: int, dataloader_idx: int = 0
+    ) -> Dict[str, torch.Tensor]:
         """
         Шаг предсказания для инференса.
 
@@ -338,8 +328,4 @@ class UniversalModelModule(L.LightningModule):
             probs = torch.sigmoid(y_hat)
             preds = (probs > 0.5).float()
 
-        return {
-            "predictions": preds,
-            "probabilities": probs,
-            "labels": y
-        }
+        return {"predictions": preds, "probabilities": probs, "labels": y}

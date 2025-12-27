@@ -243,6 +243,12 @@ def test() -> dict:
         if hasattr(cfg, "submission_file") and cfg.submission_file:
             logger.info(f"   Submission файл: {cfg.submission_file}")
 
+        logger.info("Добавление результатов теста в DVC...")
+        import subprocess
+        subprocess.run(["dvc", "add", str(results_file)], capture_output=True)
+        if hasattr(cfg, "submission_file") and cfg.submission_file and Path(cfg.submission_file).exists():
+            subprocess.run(["dvc", "add", cfg.submission_file], capture_output=True)
+
         return test_metrics
 
 
