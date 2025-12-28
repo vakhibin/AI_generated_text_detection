@@ -46,10 +46,18 @@ pre-commit install
 uv run python main.py <команда>
 ```
 
+### Дополнительно
+- Для запуска логирования с MLflow нужно поменять соответствующие настройки в Hydra, а также запустить mlflow сервер:
+```
+
+```
+
+
+
 ## Основные команды
 ### Load data
 ```bash
-uv run main.py load_data
+uv run main.py download_data
 ```
 
 ### Preprocessing

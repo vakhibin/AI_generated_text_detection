@@ -206,11 +206,9 @@ class UniversalModelModule(L.LightningModule):
         Вызывается в конце эпохи тренировки.
         Логирует метрики и сбрасывает их.
         """
-        if self.current_epoch % self.log_interval == 0:
-            metrics = self.train_metrics.compute()
-            self._log_metrics(metrics, "train")
-
         self.train_metrics.reset()
+        self.val_metrics.reset()
+
 
     def on_validation_epoch_end(self) -> None:
         """

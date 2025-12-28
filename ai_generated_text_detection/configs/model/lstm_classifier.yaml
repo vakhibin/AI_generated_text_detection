@@ -10,3 +10,4 @@ params:
   num_layers: 2
   dropout: 0.5
   num_classes: 2
+  max_len: 771

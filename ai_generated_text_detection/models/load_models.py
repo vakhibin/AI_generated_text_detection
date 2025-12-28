@@ -114,6 +114,8 @@ def create_model_and_module(cfg) -> tuple:
             embedding_dim=params.embedding_dim,
             hidden_dim=params.hidden_dim,
             num_layers=params.num_layers,
+            num_classes=params.num_classes,
+            dropout=params.dropout,
         )
         clean_model_type = "lstm"
 
@@ -126,10 +128,10 @@ def create_model_and_module(cfg) -> tuple:
         model = SimpleTransformerClassifier(
             vocab_size=params.vocab_size,
             max_len=cfg.in_features,
-            d_model=params.embedding_dim,
-            nhead=params.num_heads,
+            embedding_dim=params.embedding_dim,
+            num_heads=params.num_heads,
             num_layers=params.num_layers,
-            dim_feedforward=params.hidden_dim,
+            hidden_dim=params.hidden_dim,
             dropout=params.dropout,
         )
         clean_model_type = "transformer"

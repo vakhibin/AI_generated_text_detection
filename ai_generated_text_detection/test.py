@@ -7,9 +7,8 @@ import torch
 import torchmetrics
 from hydra import compose, initialize
 
-from data.loaders import load_preprocessed_data
-from models.load_models import create_model
-
+from ai_generated_text_detection.data.loaders import load_preprocessed_data
+from ai_generated_text_detection.models.load_models import create_model
 from ai_generated_text_detection.logger import logger
 
 
@@ -23,7 +22,7 @@ def test() -> dict:
         Словарь с метриками тестирования.
     """
     with initialize(
-        config_path="./ai_generated_text_detection/configs", version_base=None
+        config_path="configs", version_base=None
     ):
         cfg = compose(config_name="config")
 
@@ -68,36 +67,6 @@ def test() -> dict:
             # Добавляем специфичные параметры модели
             if hasattr(cfg.model, "params"):
                 model_kwargs.update(cfg.model.params)
-
-            # Для LSTM модели
-            if cfg.model.type == "lstm":
-                model_kwargs.update(
-                    {
-                        "embedding_dim": cfg.model.get("embedding_dim", 256),
-                        "hidden_dim": cfg.model.get("hidden_dim", 128),
-                        "num_layers": cfg.model.get("num_layers", 1),
-                    }
-                )
-            # Для Transformer модели
-            elif cfg.model.type == "transformer":
-                model_kwargs.update(
-                    {
-                        "max_len": cfg.in_features,
-                        "d_model": cfg.model.get("d_model", 128),
-                        "nhead": cfg.model.get("nhead", 4),
-                        "num_layers": cfg.model.get("num_layers", 3),
-                        "dim_feedforward": cfg.model.get("dim_feedforward", 256),
-                        "dropout": cfg.model.get("dropout", 0.1),
-                    }
-                )
-            # Для Baseline модели
-            elif cfg.model.type == "baseline":
-                model_kwargs.update(
-                    {
-                        "in_features": cfg.in_features,
-                        "num_classes": cfg.num_classes,
-                    }
-                )
 
             # Создаем модель
             model = create_model(cfg.model.type, **model_kwargs)
