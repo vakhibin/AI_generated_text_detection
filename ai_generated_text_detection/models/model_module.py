@@ -3,7 +3,6 @@
 import torch
 import lightning as L
 import torch.nn as nn
-import torch.nn.functional as F
 from torchmetrics import MetricCollection
 import torchmetrics
 from typing import Optional, Dict, Any
