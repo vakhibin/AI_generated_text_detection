@@ -1,5 +1,5 @@
 # @package _global_.logging
-tensorboard: false
-mlflow: false
+tensorboard: true
+mlflow: true
 tracking_uri: "http://127.0.0.1:8080"
 experiment_name: "ai_text_detection"

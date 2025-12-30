@@ -209,7 +209,6 @@ class UniversalModelModule(L.LightningModule):
         self.train_metrics.reset()
         self.val_metrics.reset()
 
-
     def on_validation_epoch_end(self) -> None:
         """
         Вызывается в конце эпохи валидации.

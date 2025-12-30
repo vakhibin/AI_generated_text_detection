@@ -5,7 +5,15 @@ import pytorch_lightning as pl
 
 
 class LSTMClassifier(nn.Module):
-    def __init__(self, vocab_size, embedding_dim=256, hidden_dim=128, num_layers=1, dropout=0.5, num_classes=2):
+    def __init__(
+        self,
+        vocab_size,
+        embedding_dim=256,
+        hidden_dim=128,
+        num_layers=1,
+        dropout=0.5,
+        num_classes=2,
+    ):
         super().__init__()
         self.embedding_dim = embedding_dim
         self.hidden_dim = hidden_dim
@@ -44,14 +52,14 @@ class EssayLSTMClassifier(pl.LightningModule):
         super().__init__()
 
         # Сохраняем все гиперпараметры
-        self.save_hyperparameters(ignore=['model_params'])
+        self.save_hyperparameters(ignore=["model_params"])
 
         # Извлекаем параметры модели из model_params
-        embedding_dim = model_params.get('embedding_dim', 256)
-        hidden_dim = model_params.get('hidden_dim', 128)
-        num_layers = model_params.get('num_layers', 1)
-        dropout = model_params.get('dropout', 0.5)
-        num_classes = model_params.get('num_classes', 2)
+        embedding_dim = model_params.get("embedding_dim", 256)
+        hidden_dim = model_params.get("hidden_dim", 128)
+        num_layers = model_params.get("num_layers", 1)
+        dropout = model_params.get("dropout", 0.5)
+        num_classes = model_params.get("num_classes", 2)
 
         # Создаем модель с параметрами из конфига
         self.model = LSTMClassifier(
@@ -60,7 +68,7 @@ class EssayLSTMClassifier(pl.LightningModule):
             hidden_dim=hidden_dim,
             num_layers=num_layers,
             dropout=dropout,
-            num_classes=num_classes
+            num_classes=num_classes,
         )
 
         self.lr = learning_rate
@@ -82,8 +90,8 @@ class EssayLSTMClassifier(pl.LightningModule):
         self.log("train_loss", loss, prog_bar=True)
 
         if (
-                self.trainer.current_epoch % 10 == 0
-                or self.trainer.current_epoch == self.trainer.max_epochs - 1
+            self.trainer.current_epoch % 10 == 0
+            or self.trainer.current_epoch == self.trainer.max_epochs - 1
         ):
             self.log(
                 f"Epoch {self.trainer.current_epoch}, Batch {batch_idx}: Train loss = {loss:.4f}"
@@ -109,8 +117,8 @@ class EssayLSTMClassifier(pl.LightningModule):
         self.log("val_acc", acc, prog_bar=True)
 
         if (
-                self.trainer.current_epoch % 10 == 0
-                or self.trainer.current_epoch == self.trainer.max_epochs - 1
+            self.trainer.current_epoch % 10 == 0
+            or self.trainer.current_epoch == self.trainer.max_epochs - 1
         ):
             self.log(
                 f"Epoch {self.trainer.current_epoch}, Batch {batch_idx}: Val acc = {acc}"

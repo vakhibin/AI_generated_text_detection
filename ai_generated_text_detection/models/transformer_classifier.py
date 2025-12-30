@@ -17,7 +17,8 @@ class PositionalEncoding(nn.Module):
         pe = torch.zeros(max_len, embedding_dim)
         position = torch.arange(0, max_len, dtype=torch.float).unsqueeze(1)
         div_term = torch.exp(
-            torch.arange(0, embedding_dim, 2).float() * (-math.log(10000.0) / embedding_dim)
+            torch.arange(0, embedding_dim, 2).float()
+            * (-math.log(10000.0) / embedding_dim)
         )
 
         pe[:, 0::2] = torch.sin(position * div_term)
@@ -33,15 +34,15 @@ class PositionalEncoding(nn.Module):
 
 class SimpleTransformerClassifier(nn.Module):
     def __init__(
-            self,
-            vocab_size,
-            max_len=200,
-            embedding_dim=128,
-            num_heads=4,
-            num_layers=2,
-            hidden_dim=256,
-            dropout=0.1,
-            num_classes=2  # ДОБАВЛЕНО
+        self,
+        vocab_size,
+        max_len=200,
+        embedding_dim=128,
+        num_heads=4,
+        num_layers=2,
+        hidden_dim=256,
+        dropout=0.1,
+        num_classes=2,  # ДОБАВЛЕНО
     ):
         super().__init__()
         self.vocab_size = vocab_size
@@ -102,7 +103,7 @@ class SimpleTransformerClassifier(nn.Module):
 
         # 3. Создаем маску для padding токенов
         # padding_mask: True для padding токенов
-        padding_mask = (x.sum(dim=-1) == 0)  # все нули в эмбеддинге
+        padding_mask = x.sum(dim=-1) == 0  # все нули в эмбеддинге
 
         # 4. Пропускаем через Transformer
         x = self.transformer(x, src_key_padding_mask=padding_mask)
@@ -123,16 +124,16 @@ class TransformerEssayClassifier(pl.LightningModule):
         super().__init__()
 
         # Сохраняем все гиперпараметры
-        self.save_hyperparameters(ignore=['model_params'])
+        self.save_hyperparameters(ignore=["model_params"])
 
         # Извлекаем параметры модели из model_params
-        embedding_dim = model_params.get('embedding_dim', 128)
-        num_heads = model_params.get('num_heads', 4)
-        num_layers = model_params.get('num_layers', 3)
-        hidden_dim = model_params.get('hidden_dim', 256)
-        dropout = model_params.get('dropout', 0.1)
-        num_classes = model_params.get('num_classes', 2)
-        max_len = model_params.get('max_len', 200)
+        embedding_dim = model_params.get("embedding_dim", 128)
+        num_heads = model_params.get("num_heads", 4)
+        num_layers = model_params.get("num_layers", 3)
+        hidden_dim = model_params.get("hidden_dim", 256)
+        dropout = model_params.get("dropout", 0.1)
+        num_classes = model_params.get("num_classes", 2)
+        max_len = model_params.get("max_len", 200)
 
         # Модель с параметрами из конфига
         self.model = SimpleTransformerClassifier(
@@ -143,7 +144,7 @@ class TransformerEssayClassifier(pl.LightningModule):
             num_layers=num_layers,
             hidden_dim=hidden_dim,
             dropout=dropout,
-            num_classes=num_classes
+            num_classes=num_classes,
         )
 
         self.lr = learning_rate
@@ -159,7 +160,9 @@ class TransformerEssayClassifier(pl.LightningModule):
                 "precision": torchmetrics.Precision(task=task, num_classes=num_labels),
                 "recall": torchmetrics.Recall(task=task, num_classes=num_labels),
                 "f1": torchmetrics.F1Score(task=task, num_classes=num_labels),
-                "auc": torchmetrics.AUROC(task=task, num_classes=num_labels) if task == "binary" else None,
+                "auc": torchmetrics.AUROC(task=task, num_classes=num_labels)
+                if task == "binary"
+                else None,
             },
             prefix="train_",
         )
@@ -175,7 +178,9 @@ class TransformerEssayClassifier(pl.LightningModule):
                 "precision": torchmetrics.Precision(task=task, num_classes=num_labels),
                 "recall": torchmetrics.Recall(task=task, num_classes=num_labels),
                 "f1": torchmetrics.F1Score(task=task, num_classes=num_labels),
-                "auc": torchmetrics.AUROC(task=task, num_classes=num_labels) if task == "binary" else None,
+                "auc": torchmetrics.AUROC(task=task, num_classes=num_labels)
+                if task == "binary"
+                else None,
             },
             prefix="val_",
         )

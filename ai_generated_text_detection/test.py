@@ -21,9 +21,7 @@ def test() -> dict:
     dict
         Словарь с метриками тестирования.
     """
-    with initialize(
-        config_path="configs", version_base=None
-    ):
+    with initialize(config_path="configs", version_base=None):
         cfg = compose(config_name="config")
 
         logger.info("=" * 50)
@@ -214,8 +212,13 @@ def test() -> dict:
 
         logger.info("Добавление результатов теста в DVC...")
         import subprocess
+
         subprocess.run(["dvc", "add", str(results_file)], capture_output=True)
-        if hasattr(cfg, "submission_file") and cfg.submission_file and Path(cfg.submission_file).exists():
+        if (
+            hasattr(cfg, "submission_file")
+            and cfg.submission_file
+            and Path(cfg.submission_file).exists()
+        ):
             subprocess.run(["dvc", "add", cfg.submission_file], capture_output=True)
 
         return test_metrics
