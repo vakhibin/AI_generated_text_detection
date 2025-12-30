@@ -55,7 +55,7 @@ pip install uv
 
 ```bash
 git clone <your-repo-url>
-cd HSE_MLOps_Project
+cd AI_generated_text_detection
 ```
 
 3. Создаем виртуальное окружение и устанавливаем зависимости
@@ -84,7 +84,7 @@ pre-commit install
 6. Запускать команды лучше через окружение uv
 
 ```bash
-uv run python main.py <команда>
+uv run python3 main.py <команда>
 ```
 
 ### Дополнительно
@@ -100,16 +100,16 @@ uv run tensorboard --logdir <папка с логами>
 
 Чтобы запустить обучение модели, нужно предварительно подготовить данные с помощью команд
 
-1. `python main.py download_data`
-2. `python main.py preprocess`
+1. `uv run python3 main.py download_data`
+2. `uv run python3 main.py preprocess`
 
 После этоо нужно запустить команду:
 
 ```bash
-python main.py train
+uv run python3 main.py train
 ```
 
-Для последующей валидацидации используется: `python main.py test`
+Для последующей валидацидации используется: `uv run python3 main.py test`
 
 ## Основные команды
 
